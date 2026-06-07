@@ -84,6 +84,7 @@ var defaultValueMap = map[string]string{
 	"subClashEnableRouting":       "false",
 	"subClashRules":               "",
 	"subJsonMux":                  "",
+	"subJsonXmux":                 "",
 	"subJsonRules":                "",
 	"subJsonFinalMask":            "",
 	"datepicker":                  "gregorian",
@@ -689,6 +690,10 @@ func (s *SettingService) GetSubClashRules() (string, error) {
 
 func (s *SettingService) GetSubJsonMux() (string, error) {
 	return s.getString("subJsonMux")
+}
+
+func (s *SettingService) GetSubJsonXmux() (string, error) {
+	return s.getString("subJsonXmux")
 }
 
 func (s *SettingService) GetSubJsonRules() (string, error) {

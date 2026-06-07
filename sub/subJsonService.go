@@ -23,13 +23,14 @@ type SubJsonService struct {
 	defaultOutbounds []json_util.RawMessage
 	finalMask        string
 	mux              string
+	xmux             string
 
 	inboundService service.InboundService
 	SubService     *SubService
 }
 
 // NewSubJsonService creates a new JSON subscription service with the given configuration.
-func NewSubJsonService(mux string, rules string, finalMask string, subService *SubService) *SubJsonService {
+func NewSubJsonService(mux string, xmux string, rules string, finalMask string, subService *SubService) *SubJsonService {
 	var configJson map[string]any
 	var defaultOutbounds []json_util.RawMessage
 	json.Unmarshal([]byte(defaultJson), &configJson)
@@ -55,6 +56,7 @@ func NewSubJsonService(mux string, rules string, finalMask string, subService *S
 		defaultOutbounds: defaultOutbounds,
 		finalMask:        finalMask,
 		mux:              mux,
+		xmux:             xmux,
 		SubService:       subService,
 	}
 }
@@ -226,8 +228,41 @@ func (s *SubJsonService) streamData(stream string) map[string]any {
 			delete(xhttp, "scStreamUpServerSecs")
 			delete(xhttp, "serverMaxHeaderBytes")
 		}
+		s.applyGlobalXmux(streamSettings)
 	}
 	return streamSettings
+}
+
+func (s *SubJsonService) applyGlobalXmux(streamSettings map[string]any) {
+	if s.xmux == "" {
+		return
+	}
+
+	network, _ := streamSettings["network"].(string)
+	if network != "xhttp" {
+		return
+	}
+
+	var xmux map[string]any
+	if err := json.Unmarshal([]byte(s.xmux), &xmux); err != nil || len(xmux) == 0 {
+		return
+	}
+
+	xhttp, _ := streamSettings["xhttpSettings"].(map[string]any)
+	if xhttp == nil {
+		xhttp = map[string]any{}
+		streamSettings["xhttpSettings"] = xhttp
+	}
+
+	if nonEmptyJSONMap(xhttp["xmux"]) {
+		return
+	}
+	xhttp["xmux"] = xmux
+}
+
+func nonEmptyJSONMap(value any) bool {
+	m, ok := value.(map[string]any)
+	return ok && len(m) > 0
 }
 
 func (s *SubJsonService) applyGlobalFinalMask(streamSettings map[string]any) {
@@ -299,9 +334,7 @@ func (s *SubJsonService) genVnext(inbound *model.Inbound, streamSettings json_ut
 
 	outbound.Protocol = string(inbound.Protocol)
 	outbound.Tag = "proxy"
-	if s.mux != "" {
-		outbound.Mux = json_util.RawMessage(s.mux)
-	}
+	s.applyGlobalMux(&outbound, streamSettings)
 	outbound.StreamSettings = streamSettings
 
 	security := client.Security
@@ -324,9 +357,7 @@ func (s *SubJsonService) genVless(inbound *model.Inbound, streamSettings json_ut
 	outbound := Outbound{}
 	outbound.Protocol = string(inbound.Protocol)
 	outbound.Tag = "proxy"
-	if s.mux != "" {
-		outbound.Mux = json_util.RawMessage(s.mux)
-	}
+	s.applyGlobalMux(&outbound, streamSettings)
 	outbound.StreamSettings = streamSettings
 
 	// Add encryption for VLESS outbound from inbound settings
@@ -376,9 +407,7 @@ func (s *SubJsonService) genServer(inbound *model.Inbound, streamSettings json_u
 
 	outbound.Protocol = string(inbound.Protocol)
 	outbound.Tag = "proxy"
-	if s.mux != "" {
-		outbound.Mux = json_util.RawMessage(s.mux)
-	}
+	s.applyGlobalMux(&outbound, streamSettings)
 	outbound.StreamSettings = streamSettings
 
 	settings := map[string]any{
@@ -402,9 +431,7 @@ func (s *SubJsonService) genHy(inbound *model.Inbound, newStream map[string]any,
 	outbound.Protocol = string(inbound.Protocol)
 	outbound.Tag = "proxy"
 
-	if s.mux != "" {
-		outbound.Mux = json_util.RawMessage(s.mux)
-	}
+	s.applyGlobalMuxForNetwork(&outbound, "hysteria")
 
 	var settings, stream map[string]any
 	json.Unmarshal([]byte(inbound.Settings), &settings)
@@ -440,6 +467,26 @@ func (s *SubJsonService) genHy(inbound *model.Inbound, newStream map[string]any,
 
 	result, _ := json.MarshalIndent(outbound, "", "  ")
 	return result
+}
+
+func (s *SubJsonService) applyGlobalMux(outbound *Outbound, streamSettings json_util.RawMessage) {
+	s.applyGlobalMuxForNetwork(outbound, streamNetwork(streamSettings))
+}
+
+func (s *SubJsonService) applyGlobalMuxForNetwork(outbound *Outbound, network string) {
+	if s.mux == "" || network == "xhttp" {
+		return
+	}
+	outbound.Mux = json_util.RawMessage(s.mux)
+}
+
+func streamNetwork(streamSettings json_util.RawMessage) string {
+	var stream map[string]any
+	if err := json.Unmarshal(streamSettings, &stream); err != nil {
+		return ""
+	}
+	network, _ := stream["network"].(string)
+	return network
 }
 
 func mergeFinalMask(base any, extra map[string]any) map[string]any {

@@ -1082,6 +1082,8 @@
       "subFormats": {
         "finalMask": "Final Mask",
         "finalMaskDesc": "ماسک‌های finalmask ایکس‌ری (TCP/UDP) و تنظیمات QUIC که داخل همه‌ی stream های اشتراک JSON تزریق می‌شوند. به نسخه‌ی جدید هسته‌ی xray در کلاینت نیاز دارد.",
+        "xmux": "XMUX",
+        "xmuxDesc": "xHTTP XMUX settings injected into generated JSON subscription xHTTP outbounds.",
         "packets": "بسته‌ها",
         "length": "طول",
         "interval": "بازه",

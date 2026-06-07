@@ -63,6 +63,7 @@ func NewSUBController(
 	rModel string,
 	update string,
 	jsonMux string,
+	jsonXmux string,
 	jsonRules string,
 	jsonFinalMask string,
 	clashEnableRouting bool,
@@ -91,7 +92,7 @@ func NewSUBController(
 		updateInterval:   update,
 
 		subService:      sub,
-		subJsonService:  NewSubJsonService(jsonMux, jsonRules, jsonFinalMask, sub),
+		subJsonService:  NewSubJsonService(jsonMux, jsonXmux, jsonRules, jsonFinalMask, sub),
 		subClashService: NewSubClashService(clashEnableRouting, clashRules, sub),
 	}
 	a.initRouter(g)

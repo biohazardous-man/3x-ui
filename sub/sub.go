@@ -125,6 +125,11 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 		SubJsonMux = ""
 	}
 
+	SubJsonXmux, err := s.settingService.GetSubJsonXmux()
+	if err != nil {
+		SubJsonXmux = ""
+	}
+
 	SubJsonRules, err := s.settingService.GetSubJsonRules()
 	if err != nil {
 		SubJsonRules = ""
@@ -231,7 +236,7 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 
 	s.sub = NewSUBController(
 		g, LinksPath, JsonPath, ClashPath, subJsonEnable, subClashEnable, Encrypt, ShowInfo, RemarkModel, SubUpdates,
-		SubJsonMux, SubJsonRules, SubJsonFinalMask, SubClashEnableRouting, SubClashRules, SubTitle, SubSupportUrl,
+		SubJsonMux, SubJsonXmux, SubJsonRules, SubJsonFinalMask, SubClashEnableRouting, SubClashRules, SubTitle, SubSupportUrl,
 		SubProfileUrl, SubAnnounce, SubEnableRouting, SubRoutingRules)
 
 	return engine, nil

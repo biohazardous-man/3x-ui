@@ -86,6 +86,7 @@ type AllSetting struct {
 	SubClashEnableRouting       bool   `json:"subClashEnableRouting" form:"subClashEnableRouting"`             // Enable global routing rules for Clash/Mihomo
 	SubClashRules               string `json:"subClashRules" form:"subClashRules"`                             // Clash/Mihomo global routing rules
 	SubJsonMux                  string `json:"subJsonMux" form:"subJsonMux"`                                   // JSON subscription mux configuration
+	SubJsonXmux                 string `json:"subJsonXmux" form:"subJsonXmux"`                                 // JSON subscription xHTTP XMUX configuration
 	SubJsonRules                string `json:"subJsonRules" form:"subJsonRules"`
 	SubJsonFinalMask            string `json:"subJsonFinalMask" form:"subJsonFinalMask"` // JSON subscription global finalmask (tcp/udp masks + quicParams)
 

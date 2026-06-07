@@ -1082,6 +1082,8 @@
       "subFormats": {
         "finalMask": "Final Mask",
         "finalMaskDesc": "أقنعة finalmask في xray (TCP/UDP) وضبط QUIC تُضاف إلى كل تدفق اشتراك JSON. يتطلب إصدار xray حديثًا على العميل.",
+        "xmux": "XMUX",
+        "xmuxDesc": "xHTTP XMUX settings injected into generated JSON subscription xHTTP outbounds.",
         "packets": "الحزم",
         "length": "الطول",
         "interval": "الفاصل",

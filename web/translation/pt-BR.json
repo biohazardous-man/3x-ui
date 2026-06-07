@@ -1082,6 +1082,8 @@
       "subFormats": {
         "finalMask": "Final Mask",
         "finalMaskDesc": "Máscaras finalmask do xray (TCP/UDP) e ajustes QUIC injetados em cada fluxo de assinatura JSON. Requer um cliente xray recente.",
+        "xmux": "XMUX",
+        "xmuxDesc": "xHTTP XMUX settings injected into generated JSON subscription xHTTP outbounds.",
         "packets": "Pacotes",
         "length": "Comprimento",
         "interval": "Intervalo",

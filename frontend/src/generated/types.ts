@@ -49,6 +49,7 @@ export interface AllSetting {
   subJsonPath: string;
   subJsonRules: string;
   subJsonURI: string;
+  subJsonXmux: string;
   subKeyFile: string;
   subListen: string;
   subPath: string;
@@ -137,6 +138,7 @@ export interface AllSettingView {
   subJsonPath: string;
   subJsonRules: string;
   subJsonURI: string;
+  subJsonXmux: string;
   subKeyFile: string;
   subListen: string;
   subPath: string;
@@ -280,6 +282,7 @@ export interface Inbound {
   lastTrafficResetTime: number;
   listen: string;
   nodeId?: number | null;
+  originNodeGuid?: string;
   port: number;
   protocol: Protocol;
   remark: string;
@@ -328,6 +331,7 @@ export interface Node {
   createdAt: number;
   depletedCount: number;
   enable: boolean;
+  guid: string;
   id: number;
   inboundCount: number;
   lastError: string;
@@ -337,12 +341,14 @@ export interface Node {
   name: string;
   onlineCount: number;
   panelVersion: string;
+  parentGuid?: string;
   pinnedCertSha256: string;
   port: number;
   remark: string;
   scheme: string;
   status: string;
   tlsVerifyMode: string;
+  transitive?: boolean;
   updatedAt: number;
   uptimeSecs: number;
   xrayVersion: string;

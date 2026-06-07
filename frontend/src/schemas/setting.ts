@@ -62,6 +62,7 @@ export const AllSettingSchema = z.object({
   subClashEnableRouting: z.boolean().optional(),
   subClashRules: z.string().optional(),
   subJsonMux: z.string().optional(),
+  subJsonXmux: z.string().optional(),
   subJsonRules: z.string().optional(),
   subJsonFinalMask: z.string().optional(),
   timeLocation: z.string().optional(),

@@ -1082,6 +1082,8 @@
       "subFormats": {
         "finalMask": "Final Mask",
         "finalMaskDesc": "Mask finalmask của xray (TCP/UDP) và tinh chỉnh QUIC được thêm vào mọi luồng đăng ký JSON. Yêu cầu client xray mới hơn.",
+        "xmux": "XMUX",
+        "xmuxDesc": "xHTTP XMUX settings injected into generated JSON subscription xHTTP outbounds.",
         "packets": "Gói",
         "length": "Độ dài",
         "interval": "Khoảng",

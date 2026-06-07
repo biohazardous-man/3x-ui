@@ -1083,6 +1083,8 @@
       "subFormats": {
         "finalMask": "Final Mask",
         "finalMaskDesc": "xray finalmask masks (TCP/UDP) and QUIC tuning injected into every JSON subscription stream. Requires a recent xray client.",
+        "xmux": "XMUX",
+        "xmuxDesc": "xHTTP XMUX settings injected into generated JSON subscription xHTTP outbounds.",
         "packets": "Packets",
         "length": "Length",
         "interval": "Interval",

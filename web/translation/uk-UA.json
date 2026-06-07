@@ -1082,6 +1082,8 @@
       "subFormats": {
         "finalMask": "Final Mask",
         "finalMaskDesc": "Маски finalmask xray (TCP/UDP) і налаштування QUIC, що додаються до кожного потоку JSON-підписки. Потрібна свіжа версія xray на клієнті.",
+        "xmux": "XMUX",
+        "xmuxDesc": "xHTTP XMUX settings injected into generated JSON subscription xHTTP outbounds.",
         "packets": "Пакети",
         "length": "Довжина",
         "interval": "Інтервал",

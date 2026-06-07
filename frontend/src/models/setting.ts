@@ -58,6 +58,7 @@ export class AllSetting {
   subClashEnableRouting = false;
   subClashRules = '';
   subJsonMux = '';
+  subJsonXmux = '';
   subJsonRules = '';
   subJsonFinalMask = '';
 

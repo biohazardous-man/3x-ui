@@ -8,6 +8,7 @@ import {
   Tabs,
 } from 'antd';
 import {
+  BranchesOutlined,
   PartitionOutlined,
   RocketOutlined,
   SendOutlined,
@@ -31,6 +32,22 @@ const DEFAULT_MUX = {
   concurrency: 8,
   xudpConcurrency: 16,
   xudpProxyUDP443: 'reject',
+};
+type XmuxSetting = {
+  maxConcurrency: string;
+  maxConnections: string | number;
+  cMaxReuseTimes: string | number;
+  hMaxRequestTimes: string;
+  hMaxReusableSecs: string;
+  hKeepAlivePeriod: number;
+};
+const DEFAULT_XMUX: XmuxSetting = {
+  maxConcurrency: '16-32',
+  maxConnections: 0,
+  cMaxReuseTimes: 0,
+  hMaxRequestTimes: '600-900',
+  hMaxReusableSecs: '1800-3000',
+  hKeepAlivePeriod: 0,
 };
 const DEFAULT_RULES: { type: string; outboundTag: string; domain?: string[]; ip?: string[] }[] = [
   { type: 'field', outboundTag: 'direct', domain: ['geosite:category-ir'] },
@@ -73,11 +90,16 @@ export default function SubscriptionFormatsTab({ allSetting, updateSetting }: Su
   const { isMobile } = useMediaQuery();
 
   const muxEnabled = allSetting.subJsonMux !== '';
+  const xmuxEnabled = allSetting.subJsonXmux !== '';
   const directEnabled = allSetting.subJsonRules !== '';
 
   const muxObj = useMemo(
     () => (muxEnabled ? readJson<typeof DEFAULT_MUX>(allSetting.subJsonMux, DEFAULT_MUX) : DEFAULT_MUX),
     [allSetting.subJsonMux, muxEnabled],
+  );
+  const xmuxObj = useMemo(
+    () => (xmuxEnabled ? readJson<XmuxSetting>(allSetting.subJsonXmux, DEFAULT_XMUX) : DEFAULT_XMUX),
+    [allSetting.subJsonXmux, xmuxEnabled],
   );
 
   function setMuxEnabled(v: boolean) {
@@ -87,6 +109,15 @@ export default function SubscriptionFormatsTab({ allSetting, updateSetting }: Su
   function setMuxField<K extends keyof typeof DEFAULT_MUX>(key: K, value: typeof DEFAULT_MUX[K]) {
     const next = { ...muxObj, [key]: value };
     updateSetting({ subJsonMux: JSON.stringify(next) });
+  }
+
+  function setXmuxEnabled(v: boolean) {
+    updateSetting({ subJsonXmux: v ? JSON.stringify(DEFAULT_XMUX) : '' });
+  }
+
+  function setXmuxField<K extends keyof XmuxSetting>(key: K, value: XmuxSetting[K]) {
+    const next = { ...xmuxObj, [key]: value };
+    updateSetting({ subJsonXmux: JSON.stringify(next) });
   }
 
   const ruleArray = useMemo(() => {
@@ -236,6 +267,64 @@ export default function SubscriptionFormatsTab({ allSetting, updateSetting }: Su
       },
       {
         key: '4',
+        label: catTabLabel(<BranchesOutlined />, t('pages.settings.subFormats.xmux'), isMobile),
+        children: (
+          <>
+            <SettingListItem paddings="small" title={t('pages.settings.subFormats.xmux')} description={t('pages.settings.subFormats.xmuxDesc')}>
+              <Switch checked={xmuxEnabled} onChange={setXmuxEnabled} />
+            </SettingListItem>
+            {xmuxEnabled && (
+              <div className="format-settings">
+                <SettingListItem paddings="small" title={t('pages.xray.outboundForm.maxConcurrency')}>
+                  <Input
+                    value={xmuxObj.maxConcurrency}
+                    placeholder="16-32"
+                    onChange={(e) => setXmuxField('maxConcurrency', e.target.value)}
+                  />
+                </SettingListItem>
+                <SettingListItem paddings="small" title={t('pages.xray.outboundForm.maxConnections')}>
+                  <Input
+                    value={xmuxObj.maxConnections}
+                    placeholder="0"
+                    onChange={(e) => setXmuxField('maxConnections', e.target.value)}
+                  />
+                </SettingListItem>
+                <SettingListItem paddings="small" title={t('pages.xray.outboundForm.maxReuseTimes')}>
+                  <Input
+                    value={xmuxObj.cMaxReuseTimes}
+                    placeholder="0"
+                    onChange={(e) => setXmuxField('cMaxReuseTimes', e.target.value)}
+                  />
+                </SettingListItem>
+                <SettingListItem paddings="small" title={t('pages.xray.outboundForm.maxRequestTimes')}>
+                  <Input
+                    value={xmuxObj.hMaxRequestTimes}
+                    placeholder="600-900"
+                    onChange={(e) => setXmuxField('hMaxRequestTimes', e.target.value)}
+                  />
+                </SettingListItem>
+                <SettingListItem paddings="small" title={t('pages.xray.outboundForm.maxReusableSecs')}>
+                  <Input
+                    value={xmuxObj.hMaxReusableSecs}
+                    placeholder="1800-3000"
+                    onChange={(e) => setXmuxField('hMaxReusableSecs', e.target.value)}
+                  />
+                </SettingListItem>
+                <SettingListItem paddings="small" title={t('pages.xray.outboundForm.keepAlivePeriod')}>
+                  <InputNumber
+                    value={xmuxObj.hKeepAlivePeriod}
+                    min={0}
+                    style={{ width: '100%' }}
+                    onChange={(v) => setXmuxField('hKeepAlivePeriod', Number(v) || 0)}
+                  />
+                </SettingListItem>
+              </div>
+            )}
+          </>
+        ),
+      },
+      {
+        key: '5',
         label: catTabLabel(<SendOutlined />, t('pages.settings.direct'), isMobile),
         children: (
           <>

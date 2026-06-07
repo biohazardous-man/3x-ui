@@ -1082,6 +1082,8 @@
       "subFormats": {
         "finalMask": "Final Mask",
         "finalMaskDesc": "Her JSON abonelik akışına eklenen xray finalmask maskeleri (TCP/UDP) ve QUIC ayarları. Güncel bir xray istemcisi gerektirir.",
+        "xmux": "XMUX",
+        "xmuxDesc": "xHTTP XMUX settings injected into generated JSON subscription xHTTP outbounds.",
         "packets": "Paketler",
         "length": "Uzunluk",
         "interval": "Aralık",
